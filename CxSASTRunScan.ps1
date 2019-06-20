@@ -69,21 +69,27 @@ Write-Debug $message
 $global:LASTEXITCODE = 0
 try {
     Invoke-Expression -Command $expression
+    
+    #if scan completed successfully, display results
+    if($LASTEXITCODE -eq 0) {
+        try {
+            $expression = $displayResultScript + " -results_file " + $resultsFile
+            Write-Output "Running command " + $expression
+            Invoke-Expression -Command $expression
+        }
+        catch {
+            Write-Error "Error displaying scan results!"
+            Write-Error "Exception: $($_.Exception.Message)"
+        } 
+    }
+    else {
+            #TODO: Output more detailed diagnostics based on return code
+            $message = "Scan did not complete successfully. Exit code: " + $LASTEXITCODE + ". See https://checkmarx.atlassian.net/wiki/spaces/KC/pages/914096139/CxSAST+CxOSA+Scan+v8.9.0 for more details."
+            Write-Error $message
+    }    
 }
 catch {
     #TODO: Output more detailed diagnostics based on return code
-    Write-Error "Error executing scan! Exit code: " + $LASTEXITCODE + " See https://checkmarx.atlassian.net/wiki/spaces/KC/pages/914096139/CxSAST+CxOSA+Scan+v8.9.0 for more details."
-}
-
-#if scan completed successfully, display results
-if($LASTEXITCODE -eq 0) {
-    try {
-        $expression = $displayResultScript + " -results_file " + $resultsFile
-        Write-Output "Running command " + $expression
-        Invoke-Expression -Command $expression
-    }
-    catch {
-        Write-Error "Error displaying scan results!"
-        Write-Error "Exception: $($_.Exception.Message)"
-    } 
+    Write-Error"Error executing scan!"
+    Write-Error "Exception: $($_.Exception.Message)"
 }

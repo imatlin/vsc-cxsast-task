@@ -20,7 +20,7 @@
             },
             "args": [
                  "-CxServer",          
-                "localhost",
+                "http://localhost",
                 "-projectName",              
                 "CxServer\\SP\\ACME_Corp\\AppSec\\${workspaceFolderBasename}",              
                 "-CxToken",
