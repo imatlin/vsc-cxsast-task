@@ -1,10 +1,9 @@
 # vsc-cxsast-task
 Note: This integration is provided AS-IS, with no warranty expressed or implied.  
-You are allowed to use the software, subject to the conditions specified in LICENSE file.
-
-Custom Visual Studio Code task to run CxSAST static analysis
+You are allowed to use the software, subject to the conditions specified in the LICENSE file.
 
 CxSAST Integration with Visual Studio Code
+
 VS Code is a popular code editor developed by Microsoft and released under open source license for Windows, MacOS and Linux operating systems. The editor is available here: https://code.visualstudio.com/. At the time of this writing, there is no Checkmarx plugin for VS Code. However, it is possible to launch a scan from within VS Code using custom task integration.
 
 Running CxSAST scan from within VS Code
