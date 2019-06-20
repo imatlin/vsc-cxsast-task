@@ -9,7 +9,15 @@
             "label": "Run CxSAST Analysis",
             "type": "shell",
             "group": "test",
-            "command": "D:\\Source\\vsc-cxsast-task\\CxSASTRunScan.ps1",
+            "windows": {
+                "command": "C:\\cxsast-task\\CxSASTRunScan.ps1"
+            },
+            "linux": {
+                "command": "~/bin/cxsast-task/CxSASTRunScan.ps1"
+            },
+            "osx": {
+                "command": "~/bin/cxsast-task/CxSASTRunScan.ps1"
+            },
             "args": [
                  "-CxServer",          
                 "localhost",
@@ -53,7 +61,15 @@
             "label": "Display CxSAST Results",
             "type": "shell",
             "group": "test",
-            "command": "D:\\Source\\vsc-cxsast-task\\CxSASTShowResults.ps1",
+            "windows": {
+                "command": "C:\\cxsast-task\\CxSASTShowResults.ps1"
+            },
+            "linux": {
+                "command": "~/bin/cxsast-task/CxSASTShowResults.ps1"
+            },
+            "osx": {
+                "command": "~/bin/cxsast-task/CxSASTShowResults.ps1"
+            },
             "args": [
                 "${workspaceFolder}/cx_results.xml"
             ],
