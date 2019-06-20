@@ -2,39 +2,32 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
+    "label": "CxSAST",
+    "options": {},
     "tasks": [
         {
-            "label": "Run Full CxSAST Analysis",
+            "label": "Run CxSAST Analysis",
             "type": "shell",
             "group": "test",
-            "windows": {
-                "command": "D:\\Utilities\\CxConsole\\runCxConsole.cmd"
-            },
-            "linux": {
-                "command": "~/CxConsole/runCxConsole.sh"
-            },
+            "command": "D:\\Source\\vsc-cxsast-task\\CxSASTRunScan.ps1",
             "args": [
-                "scan",
-                "-v",
-                "-CxServer",
-// TODO: replace with the URL of the Cx server                
+                 "-CxServer",          
                 "localhost",
-                "-projectName",
-// TODO: replace with the fully qualified project name                
-                "CxServer\\SP\\ACME_Corp\\AppSec\\${workspaceFolderBasename}",
-// TODO: replace XXX with the actual token, or use username/password instead                
+                "-projectName",              
+                "CxServer\\SP\\ACME_Corp\\AppSec\\${workspaceFolderBasename}",              
                 "-CxToken",
-                "baddeb2a9854268e2ef17c13a7e5de46",
-                "-LocationType",
-                "folder",
-                "-LocationPath",
+                "${env:CX_TOKEN}",
+                "-sourceLocation",
                 "${workspaceFolder}",
-                "-Preset",
+                "-preset",
                 "OWASP TOP 10 - 2017",
-// Optional values, uncomment as needed:                
+                "-isIncremental",
+                "${input:isIncremental}",
+                "-isPrivate",
+                "${input:isPrivate}",
+// Optional values, uncomment as needed:
                 "-Comment",
                 "Scanned from VSCode",
-                //"-Private",
                 //"–LocationPathExclude",
                 //"<exclude folder list>",
                 //"-LocationFilesExclude",
@@ -42,62 +35,27 @@
             ],
             "presentation": {
                 "reveal": "always"
-            }
-        },
-        {
-            "label": "Run Incremental CxSAST Analysis",
-            "type": "shell",
-            "group": "test",
-            "windows": {
-                "command": "D:\\Utilities\\CxConsole\\runCxConsole.cmd"
             },
-            "linux": {
-                "command": "~/CxConsole/runCxConsole.sh"
-            },
-            "args": [
-                "scan",
-                "-v",
-                "-CxServer",
-// TODO: replace with the URL of the Cx server                
-                "localhost",
-                "-projectName",
-// TODO: replace with the fully qualified project name                
-                "CxServer\\SP\\ACME_Corp\\AppSec\\${workspaceFolderBasename}",
-// TODO: replace XXX with the actual token, or use username/password instead                
-                "-CxToken",
-                "baddeb2a9854268e2ef17c13a7e5de46",
-                "-LocationType",
-                "folder",
-                "-LocationPath",
-                "${workspaceFolder}",
-                "-Preset",
-                "OWASP TOP 10 - 2017",
-// Optional values, uncomment as needed:                
-                "-Comment",
-                "Scanned from VSCode",
-                "-Incremental",
-                //"-Private",
-                //"–LocationPathExclude",
-                //"<exclude folder list>",
-                //"-LocationFilesExclude",
-                //"<exclude file list>" 
-            ],
-            "presentation": {
-                "reveal": "always"
-            }
+            "problemMatcher": {
+                "owner": "external",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*);(\\d+);(warning|error|info);(.*);(.*)",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4,
+                    "code": 5
+                }
+            }            
         },
         {
             "label": "Display CxSAST Results",
             "type": "shell",
             "group": "test",
-            "windows": {
-                "command": "D:\\Source\\CxVSCode\\display_results.bat"
-            },
-            "linux": {
-                "command": ""
-            },
+            "command": "D:\\Source\\vsc-cxsast-task\\CxSASTShowResults.ps1",
             "args": [
-                "fossa-cli.xml"
+                "${workspaceFolder}/cx_results.xml"
             ],
             "presentation": {
                 "reveal": "silent"
@@ -114,6 +72,22 @@
                     "code": 5
                 }
             }
+        }
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "isIncremental",
+            "description": "Run Incremental Scan?",
+            "options": ["Yes", "No"],
+            "default": "Yes"
+        },
+        {
+            "type": "pickString",
+            "id": "isPrivate",
+            "description": "Make Scan Private?",
+            "options": ["Yes", "No"],
+            "default": "No"
         }
     ]
 }

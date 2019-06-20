@@ -1,6 +1,6 @@
  # This will parse the CxSAST XML file and output results in a format interpreted by Visual Studio Code problem  mapper
  #
- # Usage: VSC_CxSAST -results_file <path-to-xml-results>
+ # Usage: CxSASTShowResults -results_file <path-to-xml-results>
  param (
     [Parameter(Mandatory=$true)][string]$results_file
  )
@@ -12,14 +12,19 @@
  [char]$separator=';'
  #task 'code' - will be displayed by VSC next to the problem and can be used to filter and search problem list
  [string]$code="CxSAST"
+
+#error text color
+[System.ConsoleColor]$error_color = [System.ConsoleColor]::Red
+# no-error text color
+[System.ConsoleColor]$ok_color = [System.ConsoleColor]::Green
  
  #Parse XML file into an object
  try {
     [xml]$results = get-content $results_file
  }
  catch {
-    Write-Output "Error parsing " + $results_file
-    Write-Output "Exception: $($_.Exception.Message)"
+    Write-Error "Error parsing $results_file"
+    Write-Error "Exception: $($_.Exception.Message)"
     exit
  }
  
@@ -36,9 +41,9 @@
  Foreach ($Vuln in $Vulns) {
 	if($Vuln.FalsePositive -eq "False") {
 		[string]$object = ""
-		#For data flows with more than one node, provide filename, line number
-		#Otherwise, provide the filename, line number
-		#Column number is useless as it doesn't take tab size into account
+		#For data flows with more than one node, provide filename, line number of the destination node (sink)
+		#Otherwise, provide the filename, line number of the source node (source)
+		#Column number is useless as it doesn't take tab size into account, and therfore does not align with what's on the screen
 		if($Vuln.Path.ChildNodes.Count -gt 1) {
 			[Object]$destination = $Vuln.Path.LastChild
 			$message = $destination.FileName + $separator + $destination.Line
@@ -69,12 +74,12 @@
 		}
 		$message += $separator + $type
 		
-		#Add vulnerability name
-		# deep link to the vulnerability information in the portal isn't displayed as a link, so no need to ass it
+		#Add vulnerability name and object (variable or method) name
+		#deep link to the vulnerability information in the portal isn't displayed as a link, so no need to add it
 		#$message += $separator + $Vuln.ParentNode.name + " [`"" + $Vuln.DeepLink + "`"]"
 		$message += $separator + $Vuln.ParentNode.name + "-" + $Vuln.ParentNode.group + " (" + $object + ")"
 		
-		#add code
+		#add tool code 
 		$message += $separator + $code
 		
 		Write-Output $message
@@ -84,9 +89,9 @@
  
  if($issue_count -gt 0) {
 	$message = "`n" + $issue_count + " issues detected. See full results at: " + $results.CxXMLResults.DeepLink
-	Write-Host $message -ForegroundColor red
+	Write-Host $message -ForegroundColor $error_color
 } else {
 	$message = "No issues detected"
-	Write-Host $message -ForegroundColor green
+	Write-Host $message -ForegroundColor $ok_color
 }
  
