@@ -36,9 +36,9 @@
 // Optional values, uncomment as needed:
                 "-Comment",
                 "Scanned from VSCode",
-                //"–LocationPathExclude",
+                //"–pathExclude",
                 //"<exclude folder list>",
-                //"-LocationFilesExclude",
+                //"-filesExclude",
                 //"<exclude file list>" 
             ],
             "presentation": {
