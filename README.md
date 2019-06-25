@@ -24,6 +24,7 @@ Since custom tasks are configured per project (or workplace folder in VS Code li
 - Set environment variables: CX_TOKEN needs to contain your authentication token; CX_CONSOLE should point to the platform-appropriate console file (runCxConsole.cmd on Windows, runCxConsole.sh on Linux and MacOS)
 - Copy the task files to a location of your own choosing.  Default is C:\cxsast-task on Windows and ~/bin/cxsast-task on Limux/MacOS.  The location can be adjusted in the tasks.json file.
 - For each project you need to scan with CxSAST:
+
          - Merge sample-tasks.json file with the tasks.json file located inside the .vscode folder, typically off the root of the project.  If there is no tasks.json in that folder, copy the sample file over and rename it to tasks.json. If the folder does not exist, go to Terminal | Configure Tasks, select "Generate tasks.json from template", and then choose "Custom...". 
          - Adjust tasks.json settings: location of the CxSAST server, team and project name, the preset to be used, folder and file exclsions (if any), and comments to be used as part of the scan.
 
