@@ -34,7 +34,7 @@ $displayResultScript += "/CxSASTShowResults.ps1"
 Write-Output $message
 
 #Construct CxConsole arguments based on the parameters passed to the script
-[string]$command_args = "scan -v -CxServer " + $cxServer + " -ProjectName " + $projectName + " -CxToken " + $cxToken
+[string]$command_args = "scan -v -CxServer " + $cxServer + " -ProjectName `"" + $projectName + "`" -CxToken " + $cxToken
 $command_args += " -LocationType folder -LocationPath `"" + $sourceLocation + "`" -Preset `"" + $preset + "`""
 
 if($isIncremental -eq "Yes") {
@@ -57,7 +57,7 @@ if($filesExclude -ne "")  {
     $command_args    += " -LocationFilesExclude `"" + $filesExclude + " `""
 }
 
-$command_args += " -ReportXML " + $resultsFile
+$command_args += " -ReportXML `"" + $resultsFile + "`""
 
 #Get CxConsole script location from the CX_CONSOLE environment variable 
 [string]$console_command = ${env:CX_CONSOLE}
@@ -90,6 +90,6 @@ try {
 }
 catch {
     #TODO: Output more detailed diagnostics based on return code
-    Write-Error"Error executing scan!"
+    Write-Error "Error executing scan!"
     Write-Error "Exception: $($_.Exception.Message)"
 }
